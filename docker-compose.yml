@@ -23,7 +23,7 @@ services:
       - "./dags:/home/dev/airflow/dags"
   postgres:
     # for Local Executor
-    image: 'postgres:11.0-alpine'
+    image: 'postgres:11.4-alpine'
     container_name: 'airflow_db'
     ports:
       - '${AIRFLOW_DB_PORT}:${AIRFLOW_DB_PORT}'
