@@ -2,5 +2,5 @@
 Docker image containing an Airflow setup with Local Executor (PostgreSQL).  
 
 ## Setup
-- Create **.env** file based on **.env.template**.
-- Run **docker-compose up -d**.
+- Create `.env` file based on `.env.template`.
+- Run `docker-compose up -d`.

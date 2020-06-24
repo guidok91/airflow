@@ -12,10 +12,11 @@ while error:
     try:
         print('Trying to connect to AirflowDB...')
         pd.read_sql('select 1;', conn_string)
-        print('AirflowDB is up!')
+        print('Airflow DB is up!')
         error = False
     except sqlalchemy.exc.OperationalError as e:
-        print("Cannot connect to Airflow DB with connection string: {}\nThe error is: {}\nTrying again..."
-              .format(conn_string, str(e)))
+        print(f"Cannot connect to Airflow DB with connection string: {conn_string}\n"
+              f"The error is: {str(e)}\n"
+              f"Trying again...")
         time.sleep(3)
         continue
