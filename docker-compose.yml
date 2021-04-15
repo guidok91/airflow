@@ -17,13 +17,15 @@ services:
         - AIRFLOW_DB_PASSWORD=${AIRFLOW_DB_PASSWORD}
         - AIRFLOW_DB_NAME=${AIRFLOW_DB_NAME}
         - AIRFLOW_ENCRYPTION_FERNET_KEY=${AIRFLOW_ENCRYPTION_FERNET_KEY}
+        - AIRFLOW_ADMIN_USER=${AIRFLOW_ADMIN_USER}
+        - AIRFLOW_ADMIN_PASSWORD=${AIRFLOW_ADMIN_PASSWORD}
 
     volumes:
     # volume to share local code folder with container, so we can make changes instantly while developing
       - "./dags:/home/dev/airflow/dags"
   postgres:
     # for Local Executor
-    image: 'postgres:12.3-alpine'
+    image: 'postgres:13.2-alpine'
     container_name: 'airflow_db'
     ports:
       - '${AIRFLOW_DB_PORT}:${AIRFLOW_DB_PORT}'

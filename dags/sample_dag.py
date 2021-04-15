@@ -4,8 +4,8 @@ from datetime import datetime
 
 dag = DAG(
     'sample',
-    description='Sample DAG',
-    start_date=datetime(2018, 1, 1)
+    start_date=datetime(2018, 1, 1),
+    catchup=False,
 )
 
 start = DummyOperator(
