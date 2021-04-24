@@ -10,7 +10,7 @@ services:
       context: .
       dockerfile: 'Dockerfile'
       args:
-        # variables should be in a local .env file which is git ignored
+        # Variables should be in a local .env file which is git ignored
         - AIRFLOW_DB_LISTENADDR=${AIRFLOW_DB_LISTENADDR}
         - AIRFLOW_DB_PORT=${AIRFLOW_DB_PORT}
         - AIRFLOW_DB_USER=${AIRFLOW_DB_USER}
@@ -21,7 +21,7 @@ services:
         - AIRFLOW_ADMIN_PASSWORD=${AIRFLOW_ADMIN_PASSWORD}
 
     volumes:
-    # volume to share local code folder with container, so we can make changes instantly while developing
+    # Volume to share local `dags` folder with the container, so we can make changes on the fly while developing
       - "./dags:/home/dev/airflow/dags"
   postgres:
     # for Local Executor

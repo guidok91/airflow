@@ -1,7 +1,10 @@
-# Airflow sample project
-Docker image containing an Airflow setup with Local Executor (PostgreSQL).  
+# Sample Airflow setup with Docker
+[Airflow](https://airflow.apache.org/) sample setup with Docker:
+- Spins up one container for Airflow and one for its database (PostgreSQL).
+- Uses LocalExecutor.
 
-## Setup
+## Instructions
 - Create `.env` file based on `.env.template`.
 - Run `docker-compose up -d`.
-- Credentials for Airflow Webserver are set on `.env` (`AIRFLOW_ADMIN_USER` and `AIRFLOW_ADMIN_PASSWORD`).
+
+Credentials for Airflow admin user are set on `.env` (`AIRFLOW_ADMIN_USER` and `AIRFLOW_ADMIN_PASSWORD`).
