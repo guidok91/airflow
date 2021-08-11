@@ -8,3 +8,5 @@
 - Run `docker-compose up -d`.
 
 Credentials for Airflow admin user are set on `.env` (`AIRFLOW_ADMIN_USER` and `AIRFLOW_ADMIN_PASSWORD`).
+
+Airflow UI is available on http://localhost:8080.

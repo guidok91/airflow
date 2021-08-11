@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
   airflow:
@@ -25,7 +25,7 @@ services:
       - "./dags:/home/dev/airflow/dags"
   postgres:
     # for Local Executor
-    image: 'postgres:13.2-alpine'
+    image: 'postgres:13.3-alpine'
     container_name: 'airflow_db'
     ports:
       - '${AIRFLOW_DB_PORT}:${AIRFLOW_DB_PORT}'
