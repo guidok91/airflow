@@ -4,7 +4,7 @@
 - Uses [LocalExecutor](https://airflow.apache.org/docs/apache-airflow/stable/executor/local.html).
 
 ## Requirements
-- [Docker](https://www.docker.com/)
+- [Docker](https://www.docker.com/).
 
 ## Instructions
 - Create `.env` file based on `.env.template`.
