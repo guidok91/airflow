@@ -8,7 +8,7 @@
 
 ## Instructions
 - Create `.env` file based on `.env.template`.
-- Run `make up`.
+- Run `make docker-up`.
 
 Credentials for Airflow admin user are set on `.env` (`AIRFLOW_ADMIN_USER` and `AIRFLOW_ADMIN_PASSWORD`).
 

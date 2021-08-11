@@ -48,4 +48,4 @@ WORKDIR $AIRFLOW_HOME
 RUN make setup
 
 # run airflow
-CMD make airflow_start
+CMD make airflow-start
