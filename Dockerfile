@@ -17,7 +17,7 @@ RUN apt-get update -q -y && \
     apt-get autoclean -q -y && \
     apt-get autoremove -q -y
 
-# set up env variables
+# set up container env variables
 ENV PATH=/home/dev/.local/bin:$PATH \
     AIRFLOW_HOME="/airflow"
 ENV PYTHONPATH="${PYTHONPATH}:$AIRFLOW_HOME" \
@@ -40,12 +40,12 @@ ENV PYTHONPATH="${PYTHONPATH}:$AIRFLOW_HOME" \
 
 # copy necessary files to container
 COPY ./dags $AIRFLOW_HOME/dags
-COPY ["entrypoint.sh", "wait_for_db.py", "requirements.txt", "Makefile", "$AIRFLOW_HOME/"]
+COPY ["wait_for_db.py", "requirements.txt", "Makefile", "$AIRFLOW_HOME/"]
 
 WORKDIR $AIRFLOW_HOME
 
 # install necessary python packages
-RUN make init
+RUN make setup
 
 # run airflow
-CMD sh $AIRFLOW_HOME/entrypoint.sh
+CMD make airflow_start
