@@ -21,8 +21,8 @@ services:
         - AIRFLOW_ADMIN_PASSWORD=${AIRFLOW_ADMIN_PASSWORD}
 
     volumes:
-    # Volume to share local `dags` folder with the container, so we can make changes on the fly while developing
       - "./dags:/airflow/dags"
+      - "./.aws:/root/.aws"
   postgres:
     # for Local Executor
     image: 'postgres:13.3-alpine'
