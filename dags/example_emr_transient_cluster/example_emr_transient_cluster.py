@@ -6,6 +6,7 @@ terminating the cluster.
 from datetime import datetime
 
 from airflow import DAG
+from airflow.utils.trigger_rule import TriggerRule
 from airflow.providers.amazon.aws.operators.emr_add_steps import EmrAddStepsOperator
 from airflow.providers.amazon.aws.operators.emr_create_job_flow import EmrCreateJobFlowOperator
 from airflow.providers.amazon.aws.operators.emr_terminate_job_flow import EmrTerminateJobFlowOperator
@@ -66,6 +67,7 @@ with DAG(
         task_id="terminate_cluster",
         job_flow_id=create_cluster.output,
         aws_conn_id="aws_default",
+        trigger_rule=TriggerRule.ALL_DONE
     )
 
     add_step_load_raw_data >> wait_for_step_load_raw_data >> \
