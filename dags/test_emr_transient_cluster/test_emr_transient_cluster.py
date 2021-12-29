@@ -9,6 +9,14 @@ from airflow.providers.amazon.aws.sensors.emr_step import EmrStepSensor
 
 from dags.test_emr_transient_cluster.settings import EMRClusterConfig, SparkSteps
 
+"""
+Sample DAG to run Spark jobs on an EMR transient cluster.
+Steps:
+    * Spins up an EMR cluster.
+    * Waits for it to be ready.
+    * Submits Spark jobs to the cluster.
+    * Terminates cluster.
+"""
 
 with DAG(
     dag_id="test_emr_transient_cluster",
