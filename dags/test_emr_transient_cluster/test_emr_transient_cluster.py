@@ -1,8 +1,3 @@
-"""
-This is an example dag for a AWS EMR Pipeline.
-Starting by creating a cluster, adding steps/operations, checking steps and finally when finished
-terminating the cluster.
-"""
 from datetime import datetime
 
 from airflow import DAG
@@ -12,11 +7,11 @@ from airflow.providers.amazon.aws.operators.emr_create_job_flow import EmrCreate
 from airflow.providers.amazon.aws.operators.emr_terminate_job_flow import EmrTerminateJobFlowOperator
 from airflow.providers.amazon.aws.sensors.emr_step import EmrStepSensor
 
-from dags.example_emr_transient_cluster.settings import EMRClusterConfig, SparkSteps
+from dags.test_emr_transient_cluster.settings import EMRClusterConfig, SparkSteps
 
 
 with DAG(
-    dag_id="example_emr_transient_cluster",
+    dag_id="test_emr_transient_cluster",
     default_args={
         "owner": "Guido Kosloff",
         "depends_on_past": False,

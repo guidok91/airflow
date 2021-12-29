@@ -1,23 +1,22 @@
 
 
 class EMRClusterConfig:
+    _CLUSTER_NAME = "test-transient-cluster"
+
     _TAGS = [
+        {"Key": "Name", "Value": _CLUSTER_NAME},
         {"Key": "ClusterState", "Value": "Transient"},
         {"Key": "Environment", "Value": "Staging"},
-        {"Key": "Group", "Value": "Experimentation EMR"},
-        {"Key": "Name", "Value": "test-guido-transient-cluster"},
         {"Key": "Service", "Value": "EMR Cluster"},
-        {"Key": "Squad", "Value": "Experimentation Core"},
-        {"Key": "Tribe", "Value": "AdTech"},
     ]
 
     _INSTANCES = {
-        "Ec2SubnetId": "subnet-0242145451d96403c",
-        "EmrManagedMasterSecurityGroup": "sg-946f6ef2",
-        "EmrManagedSlaveSecurityGroup": "sg-956f6ef3",
-        "AdditionalMasterSecurityGroups": ["sg-8128cfe6", "sg-a7f3acdd"],
-        "AdditionalSlaveSecurityGroups": ["sg-8128cfe6", "sg-a7f3acdd"],
-        "ServiceAccessSecurityGroup": "sg-99d230e2",
+        "Ec2SubnetId": "<PLACDHOLDER>",
+        "EmrManagedMasterSecurityGroup": "<PLACDHOLDER>",
+        "EmrManagedSlaveSecurityGroup": "<PLACDHOLDER>",
+        "AdditionalMasterSecurityGroups": ["<PLACDHOLDER>", "<PLACDHOLDER>"],
+        "AdditionalSlaveSecurityGroups": ["<PLACDHOLDER>", "<PLACDHOLDER>"],
+        "ServiceAccessSecurityGroup": "<PLACDHOLDER>",
         "InstanceGroups": [
             {
                 "Name": "Master",
@@ -32,10 +31,10 @@ class EMRClusterConfig:
     }
 
     JOB_FLOW_OVERRIDES = {
-        "Name": "test-guido-transient-cluster",
+        "Name": _CLUSTER_NAME,
         "ReleaseLabel": "emr-6.4.0",
         "Applications": [{"Name": "Spark"}],
-        "LogUri": "s3://hf-bi-emr-staging-logs/",
+        "LogUri": "s3://<PLACDHOLDER>/",
         "Instances": _INSTANCES,
         "JobFlowRole": "EMR_EC2_DefaultRole",
         "ServiceRole": "EMR_DefaultRole",
@@ -54,7 +53,7 @@ class SparkSteps:
                     "spark-submit",
                     "--master",
                     "local",
-                    "s3://experimentation-core-ddi/binary-repository/test-guido-transient-emr-clusters/load_raw_data.py",
+                    "s3://<PLACEHOLDER>/load_raw_data.py",
                 ],
             },
         }
@@ -70,7 +69,7 @@ class SparkSteps:
                     "spark-submit",
                     "--master",
                     "local",
-                    "s3://experimentation-core-ddi/binary-repository/test-guido-transient-emr-clusters/transform.py",
+                    "s3://<PLACEHOLDER>/transform.py",
                 ],
             },
         }
