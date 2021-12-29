@@ -3,11 +3,14 @@
 - Spins up one container for Airflow and one for its database (PostgreSQL).
 - Uses [LocalExecutor](https://airflow.apache.org/docs/apache-airflow/stable/executor/local.html).
 
+Some example DAGs are located on the [dags](dags) folder.
+
 ## Requirements
 - [Docker](https://www.docker.com/).
 
 ## Instructions
-- Create `.env` file based on `.env.template`.
+- Create `.env` file based on [.env.template](.env.template).
+- [optional] If a DAG you want to test needs AWS credentials, fill them on [.aws/credentials](.aws/credentials).
 - Run `make docker-up`.
 
 Credentials for Airflow admin user are set on `.env` (`AIRFLOW_ADMIN_USER` and `AIRFLOW_ADMIN_PASSWORD`).
