@@ -3,6 +3,8 @@
 - Spins up one container for Airflow and one for its database (PostgreSQL).
 - Uses [LocalExecutor](https://airflow.apache.org/docs/apache-airflow/stable/executor/local.html).
 
+Some example DAGs are located on the [dags](dags) folder.
+
 ## Requirements
 - [Docker](https://www.docker.com/).
 
