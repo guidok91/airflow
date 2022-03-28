@@ -10,7 +10,8 @@ docker-rm:
 	docker-compose rm -fs
 
 setup:
-	pip install --upgrade pip setuptools && pip install -r requirements.txt
+	pip install --upgrade pip setuptools wheel
+	pip install -r requirements.txt
 
 airflow-start:
 	python wait_for_db.py
