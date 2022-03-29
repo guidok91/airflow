@@ -1,6 +1,6 @@
 FROM python:3.9-slim
 
-# get variables from environment
+# declare args
 ARG AIRFLOW_DB_LISTENADDR
 ARG AIRFLOW_DB_PORT
 ARG AIRFLOW_DB_USER

@@ -19,7 +19,6 @@ services:
         - AIRFLOW_ENCRYPTION_FERNET_KEY=${AIRFLOW_ENCRYPTION_FERNET_KEY}
         - AIRFLOW_ADMIN_USER=${AIRFLOW_ADMIN_USER}
         - AIRFLOW_ADMIN_PASSWORD=${AIRFLOW_ADMIN_PASSWORD}
-
     volumes:
       - "./dags:/airflow/dags"
       - "./.aws:/root/.aws"
