@@ -1,22 +1,27 @@
-import pandas as pd
 import os
-import sqlalchemy
 import time
+import logging
+import pandas as pd
+import sqlalchemy
 
-# Wait for Airflow DB to be ready
+logging.basicConfig(level=logging.INFO)
 
-conn_string = os.environ['AIRFLOW__CORE__SQL_ALCHEMY_CONN']
-error = True
+conn_string = os.environ["AIRFLOW__CORE__SQL_ALCHEMY_CONN"]
+retries = 10
 
-while error:
+while retries > 0:
     try:
-        print('Trying to connect to AirflowDB...')
-        pd.read_sql('select 1;', conn_string)
-        print('Airflow DB is up!')
-        error = False
+        logging.info("Trying to connect to AirflowDB...")
+        pd.read_sql("select 1;", conn_string)
+        logging.info("Airflow DB is up!")
+        break
     except sqlalchemy.exc.OperationalError as e:
-        print(f"Cannot connect to Airflow DB with connection string: {conn_string}\n"
-              f"The error is: {str(e)}\n"
-              f"Trying again...")
+        logging.warning(f"Cannot connect to Airflow DB\n"
+                        f"The error is: {str(e)}\n"
+                        f"Trying again (retries left {retries})...")
         time.sleep(3)
+        retries = retries - 1
         continue
+
+if retries == 0:
+    raise Exception("Could not connect to Airflow DB")

@@ -1,6 +1,5 @@
 FROM python:3.9-slim
 
-# declare args
 ARG AIRFLOW_DB_LISTENADDR
 ARG AIRFLOW_DB_PORT
 ARG AIRFLOW_DB_USER
@@ -14,14 +13,12 @@ ARG AWS_SECRET_ACCESS_KEY
 ARG AWS_SESSION_TOKEN
 ARG AWS_DEFAULT_REGION
 
-# update system
 RUN apt-get update -q -y && \
     apt-get install -y vim make build-essential && \
     apt-get clean -q -y && \
     apt-get autoclean -q -y && \
     apt-get autoremove -q -y
 
-# set up container env variables
 ENV PATH=/home/dev/.local/bin:$PATH \
     AIRFLOW_HOME="/airflow"
 ENV PYTHONPATH="${PYTHONPATH}:$AIRFLOW_HOME" \
@@ -45,14 +42,11 @@ ENV PYTHONPATH="${PYTHONPATH}:$AIRFLOW_HOME" \
     AIRFLOW__SCHEDULER__MIN_FILE_PROCESS_INTERVAL=30 \
     AIRFLOW__SCHEDULER__SCHEDULER_MAX_THREADS=1
 
-# copy necessary files to container
 COPY ./dags $AIRFLOW_HOME/dags
 COPY ["wait_for_db.py", "requirements.txt", "Makefile", "$AIRFLOW_HOME/"]
 
 WORKDIR $AIRFLOW_HOME
 
-# install necessary python packages
 RUN make setup
 
-# run airflow
 CMD make airflow-start
