@@ -9,8 +9,7 @@ Some example DAGs are located on the [dags](dags) folder.
 - [Docker](https://www.docker.com/).
 
 ## Instructions
-- Create `.env` file based on [.env.template](.env.template).
-- [optional] If a DAG you want to test needs AWS credentials, fill them on [.aws/credentials](.aws/credentials).
+- Create `.env` file based on [.env.template](.env.template). Fill AWS credentials only if needed for a DAG you want to run.
 - Run `make docker-up`.
 
 Credentials for Airflow admin user are set on `.env` (`AIRFLOW_ADMIN_USER` and `AIRFLOW_ADMIN_PASSWORD`).

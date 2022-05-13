@@ -9,6 +9,9 @@ docker-down:
 docker-rm:
 	docker-compose rm -fs
 
+docker-build:
+	docker-compose build
+
 setup:
 	pip install --upgrade pip setuptools wheel
 	pip install -r requirements.txt
