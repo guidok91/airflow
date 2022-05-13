@@ -7,7 +7,7 @@ from airflow.providers.amazon.aws.operators.emr_create_job_flow import EmrCreate
 from airflow.providers.amazon.aws.operators.emr_terminate_job_flow import EmrTerminateJobFlowOperator
 from airflow.providers.amazon.aws.sensors.emr_step import EmrStepSensor
 
-from dags.test_emr_transient_cluster.settings import EMRClusterConfig, SparkSteps
+from dags.emr_transient_cluster.settings import EMRClusterConfig, SparkSteps
 
 """
 Sample DAG to run Spark jobs on an EMR transient cluster.
@@ -19,7 +19,7 @@ Steps:
 """
 
 with DAG(
-    dag_id="test_emr_transient_cluster",
+    dag_id="emr_transient_cluster",
     default_args={
         "owner": "Guido Kosloff",
         "depends_on_past": False,

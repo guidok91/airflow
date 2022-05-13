@@ -5,7 +5,7 @@ from datetime import datetime
 with DAG(
     dag_id="dummy",
     default_args={
-        "owner": "Guido Kosloff",
+        "owner": "Guido Kosloff Gancedo",
         "depends_on_past": False,
         "email_on_failure": False,
         "email_on_retry": False,
