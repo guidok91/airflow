@@ -1,10 +1,9 @@
 from datetime import datetime, timedelta
-from typing import Any, Dict, Optional
 
 from airflow import DAG
-from airflow.providers.apache.livy.operators.livy import LivyOperator
+from astronomer.providers.apache.livy.operators.livy import LivyOperatorAsync
 
-ETL_CODE_LOCATION = "s3://movies-binaries/spark-movies-etl/latest"
+ETL_CODE_LOCATION = "s3://movies-binaries/movies-etl/latest"
 LIVY_PROXY_USER = "datalake-srv-user"
 LIVY_CONN_ID = "livy-emr-conn"
 DAG_DEFAULT_ARGS = {
@@ -17,24 +16,6 @@ DAG_DEFAULT_ARGS = {
 }
 
 
-def _build_livy_operator(task: str, spark_conf_extra: Optional[Dict[Any, Any]] = None) -> LivyOperator:
-
-    spark_conf_base = {
-        "spark.yarn.appMasterEnv.PYSPARK_PYTHON": "./env/bin/python",
-    }
-    spark_conf_extra = spark_conf_extra or {}
-
-    return LivyOperator(
-        task_id=task,
-        file=f"{ETL_CODE_LOCATION}/main.py",
-        args=["--task", task, "--execution-date", "{{ ds }}"],
-        archives=[f"{ETL_CODE_LOCATION}/venv_build.tar.gz#env"],
-        conf={**spark_conf_base, **spark_conf_extra},
-        proxy_user=LIVY_PROXY_USER,
-        livy_conn_id=LIVY_CONN_ID,
-    )
-
-
 with DAG(
     dag_id="movies-etl",
     default_args=DAG_DEFAULT_ARGS,
@@ -42,9 +23,24 @@ with DAG(
     schedule_interval="0 0 * * *",
 ) as dag:
 
-    standardize = _build_livy_operator(
-        task="standardize", spark_conf_extra={"spark.jars.packages": "org.apache.spark:spark-avro_2.12:3.1.2"}
+    standardize = LivyOperatorAsync(
+        task_id="standardize",
+        proxy_user=LIVY_PROXY_USER,
+        livy_conn_id=LIVY_CONN_ID,
+        file=f"{ETL_CODE_LOCATION}/main.py",
+        args=["--task", "standardize", "--execution-date", "{{ ds }}"],
+        conf={"master": "yarn", "deploy-mode": "cluster"},
+        py_files=[f"{ETL_CODE_LOCATION}/libs.zip"],
     )
-    curate = _build_livy_operator(task="curate")
+
+    curate = LivyOperatorAsync(
+        task_id="curate",
+        proxy_user=LIVY_PROXY_USER,
+        livy_conn_id=LIVY_CONN_ID,
+        file=f"{ETL_CODE_LOCATION}/main.py",
+        args=["--task", "curate", "--execution-date", "{{ ds }}"],
+        conf={"master": "yarn", "deploy-mode": "cluster"},
+        py_files=[f"{ETL_CODE_LOCATION}/libs.zip"],
+    )
 
     standardize >> curate

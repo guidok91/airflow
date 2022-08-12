@@ -1,3 +1,4 @@
-apache-airflow[postgres,crypto,amazon]==2.3.0 --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.3.0/constraints-3.9.txt
-apache-airflow-providers-apache-livy==2.2.3
-pandas==1.4.2
+apache-airflow==2.3.3 --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.3.3/constraints-3.10.txt
+apache-airflow-providers-postgres~=5.1.0
+astronomer-providers[apache.livy, amazon]~=1.7.0
+pandas~=1.4.3
