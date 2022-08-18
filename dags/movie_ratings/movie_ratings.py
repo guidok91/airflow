@@ -31,6 +31,7 @@ with DAG(
         args=["--task", "standardize", "--execution-date", "{{ ds }}"],
         conf={"master": "yarn", "deploy-mode": "cluster"},
         py_files=[f"{ETL_CODE_LOCATION}/libs.zip"],
+        files=[f"{ETL_CODE_LOCATION}/app_config.yaml"],
     )
 
     curate = LivyOperatorAsync(
@@ -41,6 +42,7 @@ with DAG(
         args=["--task", "curate", "--execution-date", "{{ ds }}"],
         conf={"master": "yarn", "deploy-mode": "cluster"},
         py_files=[f"{ETL_CODE_LOCATION}/libs.zip"],
+        files=[f"{ETL_CODE_LOCATION}/app_config.yaml"],
     )
 
     standardize >> curate
