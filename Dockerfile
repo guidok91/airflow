@@ -1,7 +1,7 @@
 FROM python:3.10-slim
 
 RUN apt-get update -q -y && \
-    apt-get install -y vim make build-essential && \
+    apt-get install -y vim make build-essential libpq-dev && \
     apt-get clean -q -y && \
     apt-get autoclean -q -y && \
     apt-get autoremove -q -y

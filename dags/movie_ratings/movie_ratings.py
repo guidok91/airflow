@@ -3,9 +3,6 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from astronomer.providers.apache.livy.operators.livy import LivyOperatorAsync
 
-ETL_CODE_LOCATION = "s3://movies-binaries/movies-etl/latest"
-LIVY_PROXY_USER = "datalake-srv-user"
-LIVY_CONN_ID = "livy-emr-conn"
 DAG_DEFAULT_ARGS = {
     "owner": "Guido Kosloff Gancedo",
     "depends_on_past": False,
@@ -14,6 +11,16 @@ DAG_DEFAULT_ARGS = {
     "retries": 1,
     "retry_delay": timedelta(minutes=5),
 }
+LIVY_PROXY_USER = "datalake-srv-user"
+LIVY_CONN_ID = "livy-emr-conn"
+ETL_CODE_LOCATION = "s3://movies-binaries/movies-etl/latest"
+SPARK_CONF = {
+    "master": "yarn",
+    "deploy-mode": "cluster",
+    "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension",
+    "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog",
+}
+SPARK_JARS=["io.delta:delta-core_2.12:2.2.0"]
 
 
 with DAG(
@@ -29,9 +36,10 @@ with DAG(
         livy_conn_id=LIVY_CONN_ID,
         file=f"{ETL_CODE_LOCATION}/main.py",
         args=["--task", "standardize", "--execution-date", "{{ ds }}"],
-        conf={"master": "yarn", "deploy-mode": "cluster"},
+        conf=SPARK_CONF,
         py_files=[f"{ETL_CODE_LOCATION}/libs.zip"],
         files=[f"{ETL_CODE_LOCATION}/app_config.yaml"],
+        jars=SPARK_JARS,
     )
 
     curate = LivyOperatorAsync(
@@ -40,9 +48,10 @@ with DAG(
         livy_conn_id=LIVY_CONN_ID,
         file=f"{ETL_CODE_LOCATION}/main.py",
         args=["--task", "curate", "--execution-date", "{{ ds }}"],
-        conf={"master": "yarn", "deploy-mode": "cluster"},
+        conf=SPARK_CONF,
         py_files=[f"{ETL_CODE_LOCATION}/libs.zip"],
         files=[f"{ETL_CODE_LOCATION}/app_config.yaml"],
+        jars=SPARK_JARS,
     )
 
     standardize >> curate
