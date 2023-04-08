@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  airflow:
+  postgres:
+    image: postgres:13.3-alpine
+    container_name: airflow_db
+    ports:
+      - "${POSTGRES_LISTENPORT}:${POSTGRES_LISTENPORT}"
+    env_file:
+      - .env
