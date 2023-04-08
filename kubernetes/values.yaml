@@ -1,23 +1,3 @@
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License.  You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
----
-# Default values for airflow.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
 
 # Provide a name to substitute for the full names of resources
 fullnameOverride: ""
@@ -46,10 +26,10 @@ securityContext: {}
 airflowHome: /opt/airflow
 
 # Default airflow repository -- overridden by all the specific images below
-defaultAirflowRepository: apache/airflow
+defaultAirflowRepository: airflow-custom
 
 # Default airflow tag to deploy
-defaultAirflowTag: "2.5.1"
+defaultAirflowTag: "1.0.0"
 
 # Airflow version (Used to make some decisions based on Airflow Version being deployed)
 airflowVersion: "2.5.1"
@@ -75,17 +55,9 @@ images:
     repository: ~
     tag: ~
     pullPolicy: IfNotPresent
-  flower:
-    repository: ~
-    tag: ~
-    pullPolicy: IfNotPresent
   statsd:
     repository: quay.io/prometheus/statsd-exporter
     tag: v0.22.8
-    pullPolicy: IfNotPresent
-  redis:
-    repository: redis
-    tag: 7-bullseye
     pullPolicy: IfNotPresent
   pgbouncer:
     repository: apache/airflow
@@ -157,42 +129,6 @@ ingress:
     # Http paths to add to the web Ingress after the default path
     succeedingPaths: []
 
-  # Configs for the Ingress of the flower Service
-  flower:
-    # Enable web ingress resource
-    enabled: false
-
-    # Annotations for the flower Ingress
-    annotations: {}
-
-    # The path for the flower Ingress
-    path: "/"
-
-    # The pathType for the above path (used only with Kubernetes v1.19 and above)
-    pathType: "ImplementationSpecific"
-
-    # The hostname for the flower Ingress (Deprecated - renamed to `ingress.flower.hosts`)
-    host: ""
-
-    # The hostnames or hosts configuration for the flower Ingress
-    hosts: []
-    # - name: ""
-    #   tls:
-    #     # Enable TLS termination for the flower Ingress
-    #     enabled: false
-    #     # the name of a pre-created Secret containing a TLS private key and certificate
-    #     secretName: ""
-
-    # The Ingress Class for the flower Ingress (used only with Kubernetes v1.19 and above)
-    ingressClassName: ""
-
-    # configs for flower Ingress TLS (Deprecated - renamed to `ingress.flower.hosts[*].tls`)
-    tls:
-      # Enable TLS termination for the flower Ingress
-      enabled: false
-      # the name of a pre-created Secret containing a TLS private key and certificate
-      secretName: ""
-
 # Network policy configuration
 networkPolicies:
   # Enabled network policies
@@ -234,7 +170,7 @@ rbac:
 
 # Airflow executor
 # One of: LocalExecutor, LocalKubernetesExecutor, CeleryExecutor, KubernetesExecutor, CeleryKubernetesExecutor
-executor: "CeleryExecutor"
+executor: "KubernetesExecutor"
 
 # If this is true and using LocalExecutor/KubernetesExecutor/CeleryKubernetesExecutor, the scheduler's
 # service account will have access to communicate with the api-server and launch pods.
@@ -270,11 +206,6 @@ enableBuiltInSecretEnvVars:
   AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: true
   AIRFLOW_CONN_AIRFLOW_DB: true
   AIRFLOW__WEBSERVER__SECRET_KEY: true
-  AIRFLOW__CELERY__CELERY_RESULT_BACKEND: true
-  AIRFLOW__CELERY__RESULT_BACKEND: true
-  AIRFLOW__CELERY__BROKER_URL: true
-  AIRFLOW__ELASTICSEARCH__HOST: true
-  AIRFLOW__ELASTICSEARCH__ELASTICSEARCH_HOST: true
 
 # Extra secrets that will be managed by the chart
 # (You can use them with extraEnv or extraEnvFrom or some of the extraVolumes values).
@@ -1254,108 +1185,6 @@ dagProcessor:
 
   env: []
 
-# Flower settings
-flower:
-  # Enable flower.
-  # If True, and using CeleryExecutor/CeleryKubernetesExecutor, will deploy flower app.
-  enabled: false
-  # Max number of old replicasets to retain
-  revisionHistoryLimit: ~
-
-  # Command to use when running flower (templated).
-  command: ~
-  # Args to use when running flower (templated).
-  args:
-    - "bash"
-    - "-c"
-    # The format below is necessary to get `helm lint` happy
-    - |-
-      exec \
-      airflow {{ semverCompare ">=2.0.0" .Values.airflowVersion | ternary "celery flower" "flower" }}
-
-  # Additional network policies as needed (Deprecated - renamed to `flower.networkPolicy.ingress.from`)
-  extraNetworkPolicies: []
-  networkPolicy:
-    ingress:
-      # Peers for flower NetworkPolicy ingress
-      from: []
-      # Ports for flower NetworkPolicy ingress (if ingressPeers is set)
-      ports:
-        - port: "{{ .Values.ports.flowerUI }}"
-
-  resources: {}
-  #   limits:
-  #     cpu: 100m
-  #     memory: 128Mi
-  #   requests:
-  #     cpu: 100m
-  #     memory: 128Mi
-
-  # When not set, the values defined in the global securityContext will be used
-  securityContext: {}
-  #  runAsUser: 50000
-  #  fsGroup: 0
-  #  runAsGroup: 0
-
-  # Create ServiceAccount
-  serviceAccount:
-    # Specifies whether a ServiceAccount should be created
-    create: true
-    # The name of the ServiceAccount to use.
-    # If not set and create is true, a name is generated using the release name
-    name: ~
-
-    # Annotations to add to worker kubernetes service account.
-    annotations: {}
-
-  # A secret containing the connection
-  secretName: ~
-
-  # Else, if username and password are set, create secret from username and password
-  username: ~
-  password: ~
-
-  service:
-    type: ClusterIP
-    ## service annotations
-    annotations: {}
-    ports:
-      - name: flower-ui
-        port: "{{ .Values.ports.flowerUI }}"
-    # To change the port used to access flower:
-    # ports:
-    #   - name: flower-ui
-    #     port: 8080
-    #     targetPort: flower-ui
-    loadBalancerIP: ~
-    ## Limit load balancer source ips to list of CIDRs
-    # loadBalancerSourceRanges:
-    #   - "10.123.0.0/16"
-    loadBalancerSourceRanges: []
-
-  # Launch additional containers into the flower pods.
-  extraContainers: []
-  # Mount additional volumes into the flower pods.
-  extraVolumes: []
-  extraVolumeMounts: []
-
-  # Select certain nodes for airflow flower pods.
-  nodeSelector: {}
-  affinity: {}
-  tolerations: []
-  topologySpreadConstraints: []
-
-  priorityClassName: ~
-
-  # annotations for the flower deployment
-  annotations: {}
-
-  podAnnotations: {}
-
-  # Labels specific to flower objects and pods
-  labels: {}
-  env: []
-
 # StatsD settings
 statsd:
   enabled: true
@@ -1541,66 +1370,6 @@ pgbouncer:
     #   memory: 128Mi
     sslmode: "disable"
 
-# Configuration for the redis provisioned by the chart
-redis:
-  enabled: true
-  terminationGracePeriodSeconds: 600
-
-  # Create ServiceAccount
-  serviceAccount:
-    # Specifies whether a ServiceAccount should be created
-    create: true
-    # The name of the ServiceAccount to use.
-    # If not set and create is true, a name is generated using the release name
-    name: ~
-
-    # Annotations to add to worker kubernetes service account.
-    annotations: {}
-
-  persistence:
-    # Enable persistent volumes
-    enabled: true
-    # Volume size for worker StatefulSet
-    size: 1Gi
-    # If using a custom storageClass, pass name ref to all statefulSets here
-    storageClassName:
-    # Annotations to add to redis volumes
-    annotations: {}
-
-  resources: {}
-  #  limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  #  requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
-  # If set use as redis secret. Make sure to also set data.brokerUrlSecretName value.
-  passwordSecretName: ~
-
-  # Else, if password is set, create secret with it,
-  # Otherwise a new password will be generated on install
-  # Note: password can only be set during install, not upgrade.
-  password: ~
-
-  # This setting tells kubernetes that its ok to evict
-  # when it wants to scale a node down.
-  safeToEvict: true
-
-  # Select certain nodes for redis pods.
-  nodeSelector: {}
-  affinity: {}
-  tolerations: []
-  topologySpreadConstraints: []
-
-  # Set to 0 for backwards-compatiblity
-  uid: 0
-  # If not set, `redis.uid` will be used
-  securityContext: {}
-  #  runAsUser: 999
-  #  runAsGroup: 0
-
-  podAnnotations: {}
 # Auth secret for a private registry
 # This is used if pulling airflow images from a private registry
 registry:
@@ -1614,27 +1383,10 @@ registry:
   #   email: ~
   connection: {}
 
-# Elasticsearch logging configuration
-elasticsearch:
-  # Enable elasticsearch task logging
-  enabled: false
-  # A secret containing the connection
-  secretName: ~
-  # Or an object representing the connection
-  # Example:
-  # connection:
-  #   user: ~
-  #   pass: ~
-  #   host: ~
-  #   port: ~
-  connection: {}
-
 # All ports used by chart
 ports:
-  flowerUI: 5555
   airflowUI: 8080
   workerLogs: 8793
-  redisDB: 6379
   statsdIngest: 9125
   statsdScrape: 9102
   pgbouncer: 6543
@@ -1741,9 +1493,6 @@ config:
     enable_proxy_fix: 'True'
     # For Airflow 1.10
     rbac: 'True'
-  celery:
-    flower_url_prefix: '{{ .Values.ingress.flower.path }}'
-    worker_concurrency: 16
   scheduler:
     standalone_dag_processor: '{{ ternary "True" "False" .Values.dagProcessor.enabled }}'
     # statsd params included for Airflow 1.10 backward compatibility; moved to [metrics] in 2.0
@@ -1753,20 +1502,11 @@ config:
     statsd_host: '{{ printf "%s-statsd" .Release.Name }}'
     # `run_duration` included for Airflow 1.10 backward compatibility; removed in 2.0.
     run_duration: 41460
-  elasticsearch:
-    json_format: 'True'
-    log_id_template: "{dag_id}_{task_id}_{execution_date}_{try_number}"
-  elasticsearch_configs:
-    max_retries: 3
-    timeout: 30
-    retry_timeout: 'True'
   kerberos:
     keytab: '{{ .Values.kerberos.keytabPath }}'
     reinit_frequency: '{{ .Values.kerberos.reinitFrequency }}'
     principal: '{{ .Values.kerberos.principal }}'
     ccache: '{{ .Values.kerberos.ccacheMountPath }}/{{ .Values.kerberos.ccacheFileName }}'
-  celery_kubernetes_executor:
-    kubernetes_queue: 'kubernetes'
   kubernetes:
     namespace: '{{ .Release.Namespace }}'
     airflow_configmap: '{{ include "airflow_config" . }}'
@@ -1903,4 +1643,3 @@ logs:
     storageClassName:
     ## the name of an existing PVC to use
     existingClaim:
-

@@ -8,3 +8,6 @@
 [Kind](https://kind.sigs.k8s.io/), [Docker](https://www.docker.com/) and [Helm](https://helm.sh/) for local Kubernetes cluster.
 
 ## Instructions
+
+## Caveats
+- The current setup includes a PostgreSQL deployment in Kubernetes. In a production environment, the Airflow database should be hosted separately (for example as a AWS RDS instance).
