@@ -11,12 +11,12 @@ k8s-cluster-down: # Tear down local Kubernetes cluster.
 	kind delete cluster --name airflow-cluster
 
 .PHONY:
-add-airflow-helm-chart: # Add official Airflow Helm chart to local repository.
+airflow-k8s-add-helm-chart: # Add official Airflow Helm chart to local repository.
 	helm repo add apache-airflow https://airflow.apache.org
 	helm repo update
 
 .PHONY:
-k8s-create-airflow-namespace: # Creates Kubernetes namespace for Airflow.
+airflow-k8s-create-namespace: # Creates Kubernetes namespace for Airflow.
 	kubectl create namespace airflow
 
 .PHONY:
