@@ -12,7 +12,6 @@ k8s-cluster-down: # Tear down local Kubernetes cluster.
 
 .PHONY:
 add-airflow-helm-chart: # Add official Airflow Helm chart to local repository.
-	kubectl create namespace airflow
 	helm repo add apache-airflow https://airflow.apache.org
 	helm repo update
 
