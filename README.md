@@ -21,3 +21,5 @@ Basic setup:
 - On a separate terminal, run `make airflow-webserver-port-forward` to be able to access the Airflow webserver on http://localhost:8080.
 
 The credentials for the webserver are admin/admin.
+
+If you need to customize [Airflow configuration](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html) you can add the corresponding env variables under `env` in [values.yaml](values.yaml).  
