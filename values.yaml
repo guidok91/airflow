@@ -179,9 +179,9 @@ executor: "KubernetesExecutor"
 allowPodLaunching: true
 
 # Environment variables for all airflow containers
-env: []
-# - name: ""
-#   value: ""
+env:
+- name: "environment"
+  value: "staging"
 
 # Volumes for all airflow containers
 volumes: []

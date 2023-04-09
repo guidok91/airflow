@@ -22,7 +22,10 @@ Basic setup:
 
 The credentials for the webserver are admin/admin.
 
-If you need to customize [Airflow configuration](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html) you can edit the `config` section in [values.yaml](values.yaml).  
+## Configuration
+If you need to customize [Airflow configuration](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html) you can edit the `config` section in [values.yaml](values.yaml).
+
+Also environment variables can be added in the `env` section (they will be present in all the pods). 
 
 ## DAG deployment
 DAGs are deployed via GitSync.
