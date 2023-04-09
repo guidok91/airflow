@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
+import os
 
 from airflow import DAG
+from airflow.operators.empty import EmptyOperator
 from astronomer.providers.apache.livy.operators.livy import LivyOperatorAsync
 
 DAG_DEFAULT_ARGS = {
@@ -19,6 +21,7 @@ SPARK_CONF = {
     "deploy-mode": "cluster",
     "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension",
     "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog",
+    "spark.yarn.appMasterEnv.ENV_FOR_DYNACONF": os.environ["environment"],
 }
 SPARK_JARS=["io.delta:delta-core_2.12:2.2.0"]
 
@@ -35,7 +38,7 @@ with DAG(
         proxy_user=LIVY_PROXY_USER,
         livy_conn_id=LIVY_CONN_ID,
         file=f"{ETL_CODE_LOCATION}/main.py",
-        args=["--task", "standardize", "--execution-date", "{{ ds }}"],
+        args=["--task", "standardize", "--execution-date", "{{ ds }}", "--config-file-path", "app_config.yaml"],
         conf=SPARK_CONF,
         py_files=[f"{ETL_CODE_LOCATION}/libs.zip"],
         files=[f"{ETL_CODE_LOCATION}/app_config.yaml"],
@@ -47,11 +50,11 @@ with DAG(
         proxy_user=LIVY_PROXY_USER,
         livy_conn_id=LIVY_CONN_ID,
         file=f"{ETL_CODE_LOCATION}/main.py",
-        args=["--task", "curate", "--execution-date", "{{ ds }}"],
+        args=["--task", "curate", "--execution-date", "{{ ds }}", "--config-file-path", "app_config.yaml"],
         conf=SPARK_CONF,
         py_files=[f"{ETL_CODE_LOCATION}/libs.zip"],
         files=[f"{ETL_CODE_LOCATION}/app_config.yaml"],
         jars=SPARK_JARS,
     )
 
-    standardize >> curate
+    EmptyOperator(task_id="start") >> standardize >> curate >> EmptyOperator(task_id="end")
