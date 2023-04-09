@@ -4,7 +4,7 @@ help:
 
 .PHONY:
 k8s-cluster-up: # Create local Kubernetes cluster.
-	kind create cluster --name airflow-cluster --config kind-cluster.yaml
+	kind create cluster --name airflow-cluster --config k8s/kind-cluster.yaml
 
 .PHONY:
 k8s-cluster-down: # Tear down local Kubernetes cluster.
@@ -21,11 +21,11 @@ airflow-k8s-create-namespace: # Creates Kubernetes namespace for Airflow.
 
 .PHONY:
 airflow-k8s-up: # Deploy Airflow on local Kubernetes cluster.
-	docker build -t airflow-custom:1.0.0 .
+	docker build -t airflow-custom:1.0.0 k8s/.
 	kind load docker-image airflow-custom:1.0.0 --name airflow-cluster
-	helm upgrade --install airflow apache-airflow/airflow -n airflow -f values.yaml --debug
-	kubectl apply -f persistent_volume.yaml
-	kubectl apply -f persistent_volume_claim.yaml
+	helm upgrade --install airflow apache-airflow/airflow -n airflow -f k8s/values.yaml --debug
+	kubectl apply -f k8s/persistent_volume.yaml
+	kubectl apply -f k8s/persistent_volume_claim.yaml
 
 .PHONY:
 airflow-k8s-down: # Tear down Airflow deployment on local Kubernetes cluster.
