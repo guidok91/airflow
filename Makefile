@@ -24,8 +24,8 @@ airflow-k8s-up: # Deploy Airflow on local Kubernetes cluster.
 	docker build -t airflow-custom:1.0.0 k8s/.
 	kind load docker-image airflow-custom:1.0.0 --name airflow-cluster
 	helm upgrade --install airflow apache-airflow/airflow -n airflow -f k8s/values.yaml --debug
-	kubectl apply -f k8s/persistent_volume.yaml
-	kubectl apply -f k8s/persistent_volume_claim.yaml
+	kubectl apply -f k8s/persistent-volume.yaml
+	kubectl apply -f k8s/persistent-volume-claim.yaml
 
 .PHONY:
 airflow-k8s-down: # Tear down Airflow deployment on local Kubernetes cluster.
