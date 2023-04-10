@@ -1,6 +1,7 @@
 .idea/
 *af_venv*/
 .env
+.venv
 
 # Airflow
 airflow*

@@ -1,9 +1,10 @@
-from datetime import datetime, timedelta
 import os
+from datetime import datetime, timedelta
 
-from airflow import DAG
 from airflow.operators.empty import EmptyOperator
 from astronomer.providers.apache.livy.operators.livy import LivyOperatorAsync
+
+from airflow import DAG
 
 DAG_DEFAULT_ARGS = {
     "owner": "Guido Kosloff Gancedo",
@@ -23,7 +24,7 @@ SPARK_CONF = {
     "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog",
     "spark.yarn.appMasterEnv.ENV_FOR_DYNACONF": os.environ["environment"],
 }
-SPARK_JARS=["io.delta:delta-core_2.12:2.2.0"]
+SPARK_JARS = ["io.delta:delta-core_2.12:2.2.0"]
 
 
 with DAG(
@@ -32,13 +33,19 @@ with DAG(
     start_date=datetime(2021, 1, 1, 0, 0),
     schedule_interval="0 0 * * *",
 ) as dag:
-
     standardize = LivyOperatorAsync(
         task_id="standardize",
         proxy_user=LIVY_PROXY_USER,
         livy_conn_id=LIVY_CONN_ID,
         file=f"{ETL_CODE_LOCATION}/main.py",
-        args=["--task", "standardize", "--execution-date", "{{ ds }}", "--config-file-path", "app_config.yaml"],
+        args=[
+            "--task",
+            "standardize",
+            "--execution-date",
+            "{{ ds }}",
+            "--config-file-path",
+            "app_config.yaml",
+        ],
         conf=SPARK_CONF,
         py_files=[f"{ETL_CODE_LOCATION}/libs.zip"],
         files=[f"{ETL_CODE_LOCATION}/app_config.yaml"],
@@ -50,11 +57,23 @@ with DAG(
         proxy_user=LIVY_PROXY_USER,
         livy_conn_id=LIVY_CONN_ID,
         file=f"{ETL_CODE_LOCATION}/main.py",
-        args=["--task", "curate", "--execution-date", "{{ ds }}", "--config-file-path", "app_config.yaml"],
+        args=[
+            "--task",
+            "curate",
+            "--execution-date",
+            "{{ ds }}",
+            "--config-file-path",
+            "app_config.yaml",
+        ],
         conf=SPARK_CONF,
         py_files=[f"{ETL_CODE_LOCATION}/libs.zip"],
         files=[f"{ETL_CODE_LOCATION}/app_config.yaml"],
         jars=SPARK_JARS,
     )
 
-    EmptyOperator(task_id="start") >> standardize >> curate >> EmptyOperator(task_id="end")
+    (
+        EmptyOperator(task_id="start")
+        >> standardize
+        >> curate
+        >> EmptyOperator(task_id="end")
+    )
