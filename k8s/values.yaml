@@ -180,7 +180,7 @@ allowPodLaunching: true
 
 # Environment variables for all airflow containers
 env:
-- name: "environment"
+- name: "ENVIRONMENT"
   value: "staging"
 
 # Volumes for all airflow containers

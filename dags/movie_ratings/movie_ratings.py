@@ -15,14 +15,14 @@ DAG_DEFAULT_ARGS = {
     "retry_delay": timedelta(minutes=5),
 }
 LIVY_PROXY_USER = "datalake-srv-user"
-LIVY_CONN_ID = "livy-emr-conn"
+LIVY_CONN_ID = "livy_emr_conn"
 ETL_CODE_LOCATION = "s3://movies-binaries/movies-etl/latest"
 SPARK_CONF = {
     "master": "yarn",
     "deploy-mode": "cluster",
     "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension",
     "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog",
-    "spark.yarn.appMasterEnv.ENV_FOR_DYNACONF": os.environ["environment"],
+    "spark.yarn.appMasterEnv.ENV_FOR_DYNACONF": os.environ["ENVIRONMENT"],
 }
 SPARK_JARS = ["io.delta:delta-core_2.12:2.2.0"]
 
