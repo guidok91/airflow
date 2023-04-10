@@ -30,7 +30,7 @@ Also environment variables can be added in the `env` section (they will be prese
 ## DAG deployment
 DAGs are deployed via GitSync.
 
-GitSync acts as a side car container alongside the other Airflow pods, synchronising the `dags/` folder in the pods with the DAGs located in a Git repo of your choice (in this case https://github.com/guidok91/airflow/dags).
+GitSync acts as a side car container alongside the other Airflow pods, synchronising the `dags/` folder in the pods with the DAGs located in a Git repo of your choice (in this case https://github.com/guidok91/airflow/tree/master/dags).
 
 ## Custom Docker image for pods
 A custom [Docker image](k8s/Dockerfile) is provided for the pods. Here we can install the Airflow dependencies we need.
