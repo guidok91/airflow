@@ -33,7 +33,7 @@ DAGs are deployed via GitSync.
 GitSync acts as a side car container alongside the other Airflow pods, synchronising the `dags/` folder in the pods with the DAGs located in a Git repo of your choice (in this case https://github.com/guidok91/airflow/tree/master/dags).
 
 ## Custom Docker image for pods
-A custom [Docker image](k8s/Dockerfile) is provided for the pods. Here we can install the Airflow dependencies we need.
+A custom [Docker image](Dockerfile) is provided for the pods. Here we can install the Airflow dependencies we need.
 
 ## Logs
 So that Airflow logs don't get lost every time a task finishes (e.g. the pod gets deleted), the setup provides a [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) that shares the logs with the host system in the `data/` folder.
