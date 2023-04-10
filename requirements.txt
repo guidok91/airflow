@@ -1,0 +1,1 @@
+astronomer-providers[apache.livy]~=1.15.2

@@ -1,6 +1,8 @@
-from airflow import DAG
-from airflow.operators.empty import EmptyOperator
 from datetime import datetime
+
+from airflow.operators.empty import EmptyOperator
+
+from airflow import DAG
 
 with DAG(
     dag_id="dummy",
@@ -14,13 +16,8 @@ with DAG(
     schedule_interval="@daily",
     catchup=False,
 ) as dag:
+    start = EmptyOperator(task_id="start")
 
-    start = EmptyOperator(
-        task_id="start"
-    )
-
-    end = EmptyOperator(
-        task_id="end"
-    )
+    end = EmptyOperator(task_id="end")
 
     start >> end

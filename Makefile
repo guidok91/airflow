@@ -21,7 +21,7 @@ airflow-k8s-create-namespace: # Creates Kubernetes namespace for Airflow.
 
 .PHONY:
 airflow-k8s-up: # Deploy Airflow on local Kubernetes cluster.
-	docker build -t airflow-custom:1.0.0 k8s/.
+	docker build -t airflow-custom:1.0.0 .
 	kind load docker-image airflow-custom:1.0.0 --name airflow-cluster
 	helm upgrade --install airflow apache-airflow/airflow -n airflow -f k8s/values.yaml --debug
 	kubectl apply -f k8s/persistent-volume.yaml
@@ -34,3 +34,16 @@ airflow-k8s-down: # Tear down Airflow deployment on local Kubernetes cluster.
 .PHONY:
 airflow-webserver-port-forward: # Make Airflow webserver accessible on http://localhost:8080.
 	kubectl port-forward svc/airflow-webserver 8080:8080 -n airflow
+
+.PHONY:
+dev-env-up: # Create local virtual env to develop DAG code.
+	python -m venv .venv
+	. .venv/bin/activate && \
+	pip install --upgrade pip setuptools wheel && \
+	pip install -r requirements-dev.txt && \
+	pip install -r requirements.txt
+
+.PHONY:
+test: # Run tests for DAG code.
+	. .venv/bin/activate && \
+	pytest tests
