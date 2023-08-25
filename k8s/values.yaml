@@ -69,29 +69,11 @@ webserverSecretKey: ~
 webserverSecretKeySecretName: ~
 
 scheduler:
-  livenessProbe:
-    initialDelaySeconds: 10
-    timeoutSeconds: 20
-    failureThreshold: 5
-    periodSeconds: 60
-    command: ~
   replicas: 1
 
 webserver:
-  allowPodLogReading: true
-  livenessProbe:
-    initialDelaySeconds: 15
-    timeoutSeconds: 30
-    failureThreshold: 20
-    periodSeconds: 5
-    scheme: HTTP
-  readinessProbe:
-    initialDelaySeconds: 15
-    timeoutSeconds: 30
-    failureThreshold: 20
-    periodSeconds: 5
-    scheme: HTTP
   replicas: 1
+  allowPodLogReading: true
   defaultUser:
     enabled: true
     role: Admin
@@ -104,12 +86,6 @@ webserver:
 triggerer:
   enabled: true
   replicas: 1
-  livenessProbe:
-    initialDelaySeconds: 10
-    timeoutSeconds: 20
-    failureThreshold: 5
-    periodSeconds: 60
-    command: ~
 
 statsd:
   enabled: true
@@ -123,7 +99,7 @@ ports:
   pgbouncerScrape: 9127
 
 cleanup:
-  enabled: false
+  enabled: true
   schedule: "*/15 * * * *"
   command: ~
   args: ["bash", "-c", "exec airflow kubernetes cleanup-pods --namespace={{ .Release.Namespace }}"]
