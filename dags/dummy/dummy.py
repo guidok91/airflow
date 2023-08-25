@@ -13,7 +13,7 @@ with DAG(
         "email_on_retry": False,
     },
     start_date=datetime(2021, 1, 1, 0, 0),
-    schedule_interval="@daily",
+    schedule="@daily",
     catchup=False,
 ) as dag:
     start = EmptyOperator(task_id="start")

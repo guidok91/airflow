@@ -31,7 +31,7 @@ with DAG(
     dag_id="movies-etl",
     default_args=DAG_DEFAULT_ARGS,
     start_date=datetime(2021, 1, 1, 0, 0),
-    schedule_interval="0 0 * * *",
+    schedule="0 0 * * *",
 ) as dag:
     standardize = LivyOperatorAsync(
         task_id="standardize",
