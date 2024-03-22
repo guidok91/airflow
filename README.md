@@ -1,7 +1,8 @@
 # Sample Airflow setup with Kubernetes
 [Apache Airflow](https://airflow.apache.org/) sample setup with Kubernetes.
 
-Spins up a local Kubernetes cluster for Airflow with Kind:
+Spins up a local Kubernetes cluster for Airflow with [Kind](https://kind.sigs.k8s.io/):
+  - Leverages [Airflow's official Helm chart](https://airflow.apache.org/docs/helm-chart/stable/index.html).
   - Uses a PostgreSQL database for Airflow.
   - Uses [Kubernetes Executor](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/kubernetes.html) to run each Airflow task on an isolated pod.
 

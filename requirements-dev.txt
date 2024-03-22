@@ -1,2 +1,2 @@
-apache-airflow==2.7.0
-pytest~=7.4.0
+apache-airflow==2.8.3
+pytest~=8.1.1
