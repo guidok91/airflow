@@ -30,7 +30,7 @@ executor: "KubernetesExecutor"
 
 env:
 - name: "ENVIRONMENT"
-  value: "staging"
+  value: "development"
 
 secret: []
 # - envName: ""
