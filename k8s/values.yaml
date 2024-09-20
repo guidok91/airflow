@@ -4,7 +4,7 @@ defaultAirflowRepository: airflow-custom
 
 defaultAirflowTag: "1.0.0"
 
-airflowVersion: "2.7.0"
+airflowVersion: "2.10.1"
 
 images:
   airflow:

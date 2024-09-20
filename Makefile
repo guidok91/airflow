@@ -23,13 +23,15 @@ airflow-k8s-create-namespace: # Creates Kubernetes namespace for Airflow.
 airflow-k8s-up: # Deploy Airflow on local Kubernetes cluster.
 	docker build -t airflow-custom:1.0.0 .
 	kind load docker-image airflow-custom:1.0.0 --name airflow-cluster
-	helm upgrade --install airflow apache-airflow/airflow -n airflow -f k8s/values.yaml --version 1.10.0 --debug
+	helm upgrade --install airflow apache-airflow/airflow -n airflow -f k8s/values.yaml --version 1.15.0 --debug
 	kubectl apply -f k8s/persistent-volume.yaml
 	kubectl apply -f k8s/persistent-volume-claim.yaml
 
 .PHONY:
-airflow-k8s-down: # Tear down Airflow deployment on local Kubernetes cluster.
-	helm delete airflow --namespace=airflow
+airflow-k8s-down: # Tear down Airflow deployment on local Kubernetes cluster and clean up volumes.
+	helm delete airflow -n airflow
+	kubectl delete pvc --all -n airflow
+	kubectl get pv -o json | jq -r '.items[] | select(.spec.claimRef.namespace=="airflow") | .metadata.name' | xargs kubectl delete pv
 
 .PHONY:
 airflow-webserver-port-forward: # Make Airflow webserver accessible on http://localhost:8080.

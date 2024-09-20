@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from airflow.operators.empty import EmptyOperator
+from airflow.operators.bash import BashOperator
 
 from airflow import DAG
 
@@ -18,6 +19,8 @@ with DAG(
 ) as dag:
     start = EmptyOperator(task_id="start")
 
+    middle = BashOperator(task_id="middle", bash_command="ls")
+
     end = EmptyOperator(task_id="end")
 
-    start >> end
+    start >> middle >> end
