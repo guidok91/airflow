@@ -1,48 +1,17 @@
-airflowHome: /opt/airflow
-
-defaultAirflowRepository: airflow-custom
-
-defaultAirflowTag: "1.0.0"
-
 airflowVersion: "2.10.1"
 
 images:
   airflow:
-    repository: ~
-    tag: ~
-    pullPolicy: IfNotPresent
-  useDefaultImageForMigration: false
-  migrationsWaitTimeout: 60
-  pod_template:
-    repository: ~
-    tag: ~
-    pullPolicy: IfNotPresent
-  statsd:
-    repository: quay.io/prometheus/statsd-exporter
-    tag: v0.22.8
-    pullPolicy: IfNotPresent
-  gitSync:
-    repository: k8s.gcr.io/git-sync/git-sync
-    tag: v3.6.3
-    pullPolicy: IfNotPresent
+    repository: airflow-custom
+    tag: latest
 
 executor: "KubernetesExecutor"
 
 env:
 - name: "ENVIRONMENT"
   value: "development"
-
-secret: []
-# - envName: ""
-#   secretName: ""
-#   secretKey: ""
-
-enableBuiltInSecretEnvVars:
-  AIRFLOW__CORE__FERNET_KEY: true
-  AIRFLOW__CORE__SQL_ALCHEMY_CONN: true
-  AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: true
-  AIRFLOW_CONN_AIRFLOW_DB: true
-  AIRFLOW__WEBSERVER__SECRET_KEY: false
+- name: "AIRFLOW__CORE__LOAD_EXAMPLES"
+  value: "false"
 
 data:
   metadataConnection:
@@ -61,7 +30,6 @@ scheduler:
 
 webserver:
   replicas: 1
-  allowPodLogReading: true
   defaultUser:
     enabled: true
     role: Admin
@@ -72,90 +40,31 @@ webserver:
     password: admin
 
 triggerer:
-  enabled: true
-  replicas: 1
+  enabled: false
 
 statsd:
   enabled: true
 
-ports:
-  airflowUI: 8080
-  workerLogs: 8793
-  statsdIngest: 9125
-  statsdScrape: 9102
-
 cleanup:
   enabled: true
-  schedule: "*/15 * * * *"
+  schedule: "*/30 * * * *"
   command: ~
   args: ["bash", "-c", "exec airflow kubernetes cleanup-pods --namespace={{ .Release.Namespace }}"]
 
 postgresql:
   enabled: true
-  image:
-    tag: "11"
   auth:
     enablePostgresUser: true
     postgresPassword: postgres
     username: postgres
     password: postgres
 
-config:
-  core:
-    dags_folder: '{{ include "airflow_dags" . }}'
-    load_examples: 'False'
-    executor: '{{ .Values.executor }}'
-    colored_console_log: 'False'
-    remote_logging: '{{- ternary "True" "False" .Values.elasticsearch.enabled }}'
-  logging:
-    remote_logging: '{{- ternary "True" "False" .Values.elasticsearch.enabled }}'
-    colored_console_log: 'False'
-  metrics:
-    statsd_on: '{{ ternary "True" "False" .Values.statsd.enabled }}'
-    statsd_port: 9125
-    statsd_prefix: airflow
-    statsd_host: '{{ printf "%s-statsd" .Release.Name }}'
-  webserver:
-    enable_proxy_fix: 'True'
-    rbac: 'True'
-  scheduler:
-    standalone_dag_processor: '{{ ternary "True" "False" .Values.dagProcessor.enabled }}'
-    statsd_on: '{{ ternary "True" "False" .Values.statsd.enabled }}'
-    statsd_port: 9125
-    statsd_prefix: airflow
-    statsd_host: '{{ printf "%s-statsd" .Release.Name }}'
-    run_duration: 41460
-  kerberos:
-    keytab: '{{ .Values.kerberos.keytabPath }}'
-    reinit_frequency: '{{ .Values.kerberos.reinitFrequency }}'
-    principal: '{{ .Values.kerberos.principal }}'
-    ccache: '{{ .Values.kerberos.ccacheMountPath }}/{{ .Values.kerberos.ccacheFileName }}'
-  kubernetes:
-    namespace: '{{ .Release.Namespace }}'
-    airflow_configmap: '{{ include "airflow_config" . }}'
-    airflow_local_settings_configmap: '{{ include "airflow_config" . }}'
-    pod_template_file: '{{ include "airflow_pod_template_file" . }}/pod_template_file.yaml'
-    worker_container_repository: '{{ .Values.images.airflow.repository | default .Values.defaultAirflowRepository }}'
-    worker_container_tag: '{{ .Values.images.airflow.tag | default .Values.defaultAirflowTag }}'
-    multi_namespace_mode: '{{ ternary "True" "False" .Values.multiNamespaceMode }}'
-
 dags:
-  persistence:
-    enabled: false
-    size: 1Gi
-    storageClassName:
-    existingClaim:
-    subPath: ~
   gitSync:
     enabled: true
     repo: https://github.com/guidok91/airflow.git
     branch: master
-    rev: HEAD
-    depth: 1
-    maxFailures: 0
     subPath: "dags"
-    wait: 5
-    containerName: git-sync
 
 logs:
   persistence:

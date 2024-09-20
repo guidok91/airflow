@@ -21,8 +21,8 @@ airflow-k8s-create-namespace: # Creates Kubernetes namespace for Airflow.
 
 .PHONY:
 airflow-k8s-up: # Deploy Airflow on local Kubernetes cluster.
-	docker build -t airflow-custom:1.0.0 .
-	kind load docker-image airflow-custom:1.0.0 --name airflow-cluster
+	docker build -t airflow-custom:latest .
+	kind load docker-image airflow-custom:latest --name airflow-cluster
 	helm upgrade --install airflow apache-airflow/airflow -n airflow -f k8s/values.yaml --version 1.15.0 --debug
 	kubectl apply -f k8s/persistent-volume.yaml
 	kubectl apply -f k8s/persistent-volume-claim.yaml
