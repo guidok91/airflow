@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 from airflow.operators.empty import EmptyOperator
@@ -26,6 +27,7 @@ with DAG(
         namespace="airflow",
         labels={"app": "airflow"},
         image="python:3.12-slim",
+        env_vars={"ENV": os.environ["ENV"]},
         cmds=["python", "-c"],
         arguments=["""import os; print(f"Hello from Kubernetes Pod in env {os.environ['ENV']}!")"""],
         in_cluster=True,
