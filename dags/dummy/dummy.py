@@ -1,7 +1,8 @@
 from datetime import datetime
 
 from airflow.operators.empty import EmptyOperator
-from airflow.operators.bash import BashOperator
+from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+
 
 from airflow import DAG
 
@@ -19,7 +20,16 @@ with DAG(
 ) as dag:
     start = EmptyOperator(task_id="start")
 
-    middle = BashOperator(task_id="middle", bash_command="ls")
+    middle = KubernetesPodOperator(
+        task_id="run_python_script",
+        name="python-pod",
+        namespace="airflow",
+        labels={"app": "airflow"},
+        image="python:3.12-slim",
+        cmds=["python", "-c"],
+        arguments=["print('Hello from Kubernetes Pod!')"],
+        in_cluster=True,
+    )
 
     end = EmptyOperator(task_id="end")
 
