@@ -63,7 +63,7 @@ dags:
   gitSync:
     enabled: true
     repo: https://github.com/guidok91/airflow.git
-    branch: master
+    branch: k8s-pod-operator
     subPath: "dags"
 
 logs:
