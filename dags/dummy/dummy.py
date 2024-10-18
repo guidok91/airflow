@@ -27,7 +27,10 @@ with DAG(
         labels={"app": "airflow"},
         image="python:3.12-slim",
         cmds=["python", "-c"],
-        arguments=["print('Hello from Kubernetes Pod!')"],
+        arguments=["""
+            import os
+            print(f"Hello from Kubernetes Pod in env {os.environ['ENV']}!")
+        """],
         in_cluster=True,
     )
 

@@ -8,7 +8,7 @@ images:
 executor: "KubernetesExecutor"
 
 env:
-- name: "ENVIRONMENT"
+- name: "ENV"
   value: "development"
 - name: "AIRFLOW__CORE__LOAD_EXAMPLES"
   value: "false"
