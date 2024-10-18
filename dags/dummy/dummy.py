@@ -28,7 +28,7 @@ with DAG(
         image="python:3.12-slim",
         cmds=["python", "-c"],
         arguments=["""
-            import os
+            import os; \
             print(f"Hello from Kubernetes Pod in env {os.environ['ENV']}!")
         """],
         in_cluster=True,
