@@ -8,7 +8,7 @@ from airflow.models.dagbag import DagBag
 @pytest.fixture
 def dag_bag() -> Generator:
     dag_folder = "dags"
-    os.environ["ENVIRONMENT"] = "development"
+    os.environ["ENV"] = "development"
     yield DagBag(dag_folder=dag_folder, include_examples=False)
 
 
