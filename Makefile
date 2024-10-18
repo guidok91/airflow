@@ -2,6 +2,8 @@
 help:
 	@grep -E '^[a-zA-Z0-9 -]+:.*#'  Makefile | while read -r l; do printf "\033[1;32m$$(echo $$l | cut -f 1 -d':')\033[00m:$$(echo $$l | cut -f 2- -d'#')\n"; done
 
+AIRFLOW_HELM_CHART_VERSION=1.15.0
+
 .PHONY:
 k8s-cluster-up: # Create local Kubernetes cluster.
 	kind create cluster --name airflow-cluster --config k8s/kind-cluster.yaml
@@ -23,7 +25,7 @@ airflow-k8s-create-namespace: # Creates Kubernetes namespace for Airflow.
 airflow-k8s-up: # Deploy Airflow on local Kubernetes cluster.
 	docker build -t airflow-custom:latest .
 	kind load docker-image airflow-custom:latest --name airflow-cluster
-	helm upgrade --install airflow apache-airflow/airflow -n airflow -f k8s/values.yaml --version 1.15.0 --debug
+	helm upgrade --install airflow apache-airflow/airflow -n airflow -f k8s/values.yaml --version $(AIRFLOW_HELM_CHART_VERSION) --debug
 	kubectl apply -f k8s/persistent-volume.yaml
 	kubectl apply -f k8s/persistent-volume-claim.yaml
 
