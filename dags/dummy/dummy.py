@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 
 from airflow.operators.empty import EmptyOperator
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+from airflow.providers.cncf.kubernetes.operators.pod import KubernetesPodOperator
 
 
 from airflow import DAG
