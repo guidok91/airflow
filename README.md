@@ -40,3 +40,6 @@ A custom [Docker image](Dockerfile) is provided for the pods. Here we can instal
 
 ## Logs
 So that Airflow logs don't get lost every time a task finishes (e.g. the pod gets deleted), the setup provides a [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) that shares the logs with the host system in the `data/` folder.
+
+## Dependency management
+Dependabot is configured to periodically upgrade repo dependencies. See [dependabot.yml](.github/dependabot.yml).
