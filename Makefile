@@ -1,4 +1,4 @@
-AIRFLOW_HELM_CHART_VERSION=1.15.0
+AIRFLOW_HELM_CHART_VERSION=1.16.0
 
 .PHONY: help
 help:
@@ -36,8 +36,8 @@ airflow-k8s-down: # Tear down Airflow deployment on local Kubernetes cluster and
 	kubectl get pv -o json | jq -r '.items[] | select(.spec.claimRef.namespace=="airflow") | .metadata.name' | xargs kubectl delete pv
 
 .PHONY:
-airflow-webserver-port-forward: # Make Airflow webserver accessible on http://localhost:8080.
-	kubectl port-forward svc/airflow-webserver 8080:8080 -n airflow
+airflow-api-server-port-forward: # Make Airflow API server accessible on http://localhost:8080.
+	kubectl port-forward svc/airflow-api-server 8080:8080 -n airflow
 
 .PHONY:
 dev-env-up: # Create local virtual env to develop DAG code.
