@@ -19,9 +19,9 @@ Basic setup:
 - Run `make airflow-k8s-add-helm-chart` to add the official Airflow Helm chart to the local repo.
 - Run `make airflow-k8s-create-namespace` to create a namespace for the Airflow deployment.
 - Run `make airflow-k8s-up` to deploy Airflow on the local Kubernetes cluster.
-- On a separate terminal, run `make airflow-webserver-port-forward` to be able to access the Airflow webserver on http://localhost:8080.
+- On a separate terminal, run `make airflow-api-server-port-forward` to be able to access the Airflow UI on http://localhost:8080.
 
-The credentials for the webserver are admin/admin.
+The credentials for the UI are admin/admin.
 
 ## Configuration
 If you need to customize the Airflow deployment you can edit [values.yaml](k8s/values.yaml) accordingly.
