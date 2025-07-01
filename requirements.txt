@@ -1,1 +1,1 @@
-apache-airflow-providers-cncf-kubernetes~=10.5.0
+apache-airflow-providers-cncf-kubernetes~=10.6.0
