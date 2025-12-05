@@ -20,6 +20,7 @@ airflow-k8s-add-helm-chart: # Add official Airflow Helm chart to local repositor
 .PHONY:
 airflow-k8s-create-namespace: # Creates Kubernetes namespace for Airflow.
 	kubectl create namespace airflow
+	kubectl config set-context kind-airflow-cluster --namespace=airflow
 
 .PHONY:
 airflow-k8s-up: # Deploy Airflow on local Kubernetes cluster.
