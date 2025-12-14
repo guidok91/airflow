@@ -1,5 +1,7 @@
 FROM apache/airflow:3.1.3
 
+ENV TZ=UTC
+
 USER root
 RUN apt-get update -q -y && \
     apt-get install -y vim make build-essential libpq-dev && \
