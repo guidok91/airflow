@@ -1,4 +1,4 @@
-airflowVersion: "3.0.1"
+airflowVersion: "3.1.3"
 
 images:
   airflow:
