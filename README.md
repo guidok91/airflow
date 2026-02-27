@@ -8,6 +8,14 @@ Spins up a local Kubernetes cluster for Airflow with [Kind](https://kind.sigs.k8
 
 This is meant as a sample local setup. In order to run it in a production environment, please refer to the [Airflow Helm chart production guide](https://airflow.apache.org/docs/helm-chart/stable/production-guide.html).
 
+- [Requirements](#requirements)
+- [Instructions](#instructions)
+- [Configuration](#configuration)
+- [DAG deployment](#dag-deployment)
+- [Custom Docker image for pods](#custom-docker-image-for-pods)
+- [Logs](#logs)
+- [Dependency management](#dependency-management)
+
 ## Requirements
 [Kind](https://kind.sigs.k8s.io/), [Docker](https://www.docker.com/) and [Helm](https://helm.sh/) for local Kubernetes cluster.
 
