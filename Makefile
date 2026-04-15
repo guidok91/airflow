@@ -3,7 +3,7 @@ export AIRFLOW_HELM_CHART_VERSION=1.16.0
 
 .PHONY: help
 help:
-	@grep -E '^[a-zA-Z0-9 -]+:.*#'  Makefile | while read -r l; do printf "\033[1;32m$$(echo $$l | cut -f 1 -d':')\033[00m:$$(echo $$l | cut -f 2- -d'#')\n"; done
+	@awk -F ':.*# ' '/^[a-zA-Z0-9_-]+:.*# / {printf "\033[32m%-35s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 .PHONY:
 k8s-cluster-up: # Create local Kubernetes cluster.
