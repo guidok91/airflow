@@ -1,4 +1,4 @@
-FROM apache/airflow:3.1.3
+FROM apache/airflow:3.2.2
 
 ENV TZ=UTC
 
