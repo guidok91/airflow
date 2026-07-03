@@ -26,10 +26,10 @@ with DAG(
         name="python-pod",
         namespace="airflow",
         labels={"app": "airflow"},
-        image="python:3.13-slim",
+        image="python:3.14-slim",
         env_vars={"ENV": os.environ["ENV"]},
         cmds=["python", "-c"],
-        arguments=["""import os; print(f"Hello from Kubernetes Pod in env {os.environ['ENV']}, logical date {{ ds }}!")"""],
+        arguments=["""import os, platform; print(f"Hello from Kubernetes Pod in {os.environ['ENV']} env, logical date {{ ds }}, running Python {platform.python_version()}!")"""],
         in_cluster=True,
     )
 

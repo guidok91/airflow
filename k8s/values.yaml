@@ -11,7 +11,7 @@ jwtSecret: "b7e2f8c9d4a1e6f3b2c5d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8"
 
 env:
 - name: "ENV"
-  value: "development"
+  value: "dev"
 - name: "AIRFLOW__CORE__LOAD_EXAMPLES"
   value: "false"
 
@@ -47,7 +47,7 @@ postgresql:
   enabled: true
   image:
     repository: postgres
-    tag: "14"
+    tag: "18"
   auth:
     enablePostgresUser: true
     postgresPassword: postgres
