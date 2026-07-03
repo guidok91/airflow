@@ -1,5 +1,5 @@
 export TZ=UTC
-export AIRFLOW_HELM_CHART_VERSION=1.16.0
+export AIRFLOW_HELM_CHART_VERSION=1.22.0
 
 .PHONY: help
 help:
