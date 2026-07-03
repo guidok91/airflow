@@ -4,7 +4,7 @@
 Spins up a local Kubernetes cluster for Airflow with [Kind](https://kind.sigs.k8s.io/):
   - Leverages [Airflow's official Helm chart](https://airflow.apache.org/docs/helm-chart/stable/index.html).
   - Uses a PostgreSQL database for Airflow.
-  - Uses [Kubernetes Executor](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/kubernetes.html) to run each Airflow task on an isolated pod.
+  - Uses [Kubernetes Executor](https://airflow.apache.org/docs/apache-airflow-providers-cncf-kubernetes/stable/kubernetes_executor.html) to run each Airflow task on an isolated pod.
 
 This is meant as a sample local setup. In order to run it in a production environment, please refer to the [Airflow Helm chart production guide](https://airflow.apache.org/docs/helm-chart/stable/production-guide.html).
 
