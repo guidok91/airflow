@@ -2,14 +2,14 @@ import os
 from typing import Generator
 
 import pytest
-from airflow.models.dagbag import DagBag
+from airflow.dag_processing.dagbag import DagBag
 
 
 @pytest.fixture
 def dag_bag() -> Generator:
     dag_folder = "dags"
     os.environ["ENV"] = "dev"
-    yield DagBag(dag_folder=dag_folder, include_examples=False)
+    yield DagBag(dag_folder=dag_folder)
 
 
 def test_dags_load_with_no_errors(dag_bag: DagBag) -> None:
