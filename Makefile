@@ -5,25 +5,25 @@ export AIRFLOW_HELM_CHART_VERSION=1.22.0
 help:
 	@awk -F ':.*# ' '/^[a-zA-Z0-9_-]+:.*# / {printf "\033[32m%-35s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-.PHONY:
+.PHONY: k8s-cluster-up
 k8s-cluster-up: # Create local Kubernetes cluster.
 	kind create cluster --name airflow-cluster --config k8s/kind-cluster.yaml
 
-.PHONY:
+.PHONY: k8s-cluster-down
 k8s-cluster-down: # Tear down local Kubernetes cluster.
 	kind delete cluster --name airflow-cluster
 
-.PHONY:
+.PHONY: airflow-k8s-add-helm-chart
 airflow-k8s-add-helm-chart: # Add official Airflow Helm chart to local repository.
 	helm repo add apache-airflow https://airflow.apache.org
 	helm repo update
 
-.PHONY:
+.PHONY: airflow-k8s-create-namespace
 airflow-k8s-create-namespace: # Creates Kubernetes namespace for Airflow.
 	kubectl create namespace airflow
 	kubectl config set-context kind-airflow-cluster --namespace=airflow
 
-.PHONY:
+.PHONY: airflow-k8s-up
 airflow-k8s-up: # Deploy Airflow on local Kubernetes cluster.
 	docker build -t airflow-custom:latest .
 	kind load docker-image airflow-custom:latest --name airflow-cluster
@@ -31,17 +31,17 @@ airflow-k8s-up: # Deploy Airflow on local Kubernetes cluster.
 	kubectl apply -f k8s/persistent-volume.yaml
 	kubectl apply -f k8s/persistent-volume-claim.yaml
 
-.PHONY:
+.PHONY: airflow-k8s-down
 airflow-k8s-down: # Tear down Airflow deployment on local Kubernetes cluster and clean up volumes.
 	helm delete airflow -n airflow
 	kubectl delete pvc --all -n airflow
 	kubectl get pv -o json | jq -r '.items[] | select(.spec.claimRef.namespace=="airflow") | .metadata.name' | xargs kubectl delete pv
 
-.PHONY:
+.PHONY: airflow-api-server-port-forward
 airflow-api-server-port-forward: # Make Airflow API server accessible on http://localhost:8080.
 	kubectl port-forward svc/airflow-api-server 8080:8080 -n airflow
 
-.PHONY:
+.PHONY: dev-env-up
 dev-env-up: # Create local virtual env to develop DAG code.
 	python -m venv .venv
 	. .venv/bin/activate && \
@@ -49,7 +49,7 @@ dev-env-up: # Create local virtual env to develop DAG code.
 	pip install -r requirements-dev.txt && \
 	pip install -r requirements.txt
 
-.PHONY:
+.PHONY: test
 test: # Run tests for DAG code.
 	. .venv/bin/activate && \
 	pytest tests
